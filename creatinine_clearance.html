@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CrCl計算機">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#fff5f9">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrCl計算機</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ============================================================
+       ポップテーマ（デフォルト）
+    ============================================================ */
+    :root {
+      --bg: #fff5f9;
+      --surface: #ffffff;
+      --surface2: #fdf0f6;
+      --surface3: #fce7f3;
+      --text: #1e1b2e;
+      --text2: #6b7280;
+      --text3: #9ca3af;
+      --border: rgba(0,0,0,0.07);
+      --border-mid: rgba(0,0,0,0.13);
+      --accent: #f472b6;
+      --accent-bg: #fce7f3;
+      --accent-text: #be185d;
+      --accent2: #a78bfa;
+      --accent2-bg: #ede9fe;
+      --accent2-text: #6d28d9;
+      --amber: #fb923c;
+      --amber-bg: #ffedd5;
+      --amber-text: #c2410c;
+      --teal: #2dd4bf;
+      --teal-bg: #ccfbf1;
+      --teal-text: #0f766e;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 26px;
+      --font: 'Nunito', -apple-system, 'Hiragino Sans', sans-serif;
+      --card-shadow: 0 2px 16px rgba(244,114,182,0.10), 0 1px 4px rgba(0,0,0,0.05);
+      --card-border: 1.5px solid rgba(244,114,182,0.15);
+      --carbo-shadow: 0 2px 16px rgba(167,139,250,0.12), 0 1px 4px rgba(0,0,0,0.05);
+      --carbo-border: 1.5px solid rgba(167,139,250,0.2);
+      --input-border: 2px solid #fce7f3;
+      --input-focus-border: #f472b6;
+      --input-focus-shadow: rgba(244,114,182,0.2);
+      --sex-active-bg: linear-gradient(135deg, #f472b6, #c084fc);
+      --sex-active-shadow: rgba(244,114,182,0.4);
+      --formula-border: 1.5px dashed rgba(0,0,0,0.07);
+      --h1-gradient: linear-gradient(135deg, #be185d, #6d28d9);
+      --stage-select-bg: white;
+    }
+
+    /* ============================================================
+       ダークテーマ
+    ============================================================ */
+    body.theme-dark {
+      --bg: #1c1c1a;
+      --surface: #252523;
+      --surface2: #2e2e2b;
+      --surface3: #353532;
+      --text: #f0efe8;
+      --text2: #b4b2a9;
+      --text3: #888780;
+      --border: rgba(255,255,255,0.1);
+      --border-mid: rgba(255,255,255,0.2);
+      --accent: #378ADD;
+      --accent-bg: #0C447C;
+      --accent-text: #B5D4F4;
+      --accent2: #378ADD;
+      --accent2-bg: #0C447C;
+      --accent2-text: #B5D4F4;
+      --amber: #EF9F27;
+      --amber-bg: #633806;
+      --amber-text: #FAC775;
+      --teal: #378ADD;
+      --teal-bg: #0C447C;
+      --teal-text: #B5D4F4;
+      --card-shadow: none;
+      --card-border: 0.5px solid rgba(255,255,255,0.1);
+      --carbo-shadow: none;
+      --carbo-border: 0.5px solid rgba(255,255,255,0.1);
+      --input-border: 0.5px solid rgba(255,255,255,0.1);
+      --input-focus-border: #378ADD;
+      --input-focus-shadow: rgba(55,138,221,0.25);
+      --sex-active-bg: #0C447C;
+      --sex-active-shadow: rgba(55,138,221,0.3);
+      --formula-border: 0.5px solid rgba(255,255,255,0.1);
+      --h1-gradient: linear-gradient(135deg, #B5D4F4, #B5D4F4);
+      --stage-select-bg: rgba(255,255,255,0.08);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    /* ============================================================
+       テーマ切り替えバー
+    ============================================================ */
+    .theme-bar {
+      display: flex; justify-content: center;
+      gap: 6px; padding: 10px 1rem 0;
+      max-width: 600px; margin: 0 auto 0;
+    }
+    .theme-toggle-btn {
+      flex: 1; max-width: 180px; height: 36px;
+      border-radius: 20px; border: 2px solid transparent;
+      font-family: var(--font); font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; display: flex;
+      align-items: center; justify-content: center; gap: 6px;
+    }
+    .theme-toggle-btn.pop {
+      background: linear-gradient(135deg, #fce7f3, #ede9fe);
+      color: #be185d; border-color: #f9a8d4;
+    }
+    body.theme-dark .theme-toggle-btn.pop {
+      background: transparent;
+      color: #888780; border-color: rgba(255,255,255,0.12);
+    }
+    .theme-toggle-btn.pop.active {
+      background: linear-gradient(135deg, #f472b6, #a78bfa);
+      color: white; border-color: transparent;
+      box-shadow: 0 3px 12px rgba(244,114,182,0.45);
+    }
+    .theme-toggle-btn.dark {
+      background: #2e2e2b; color: #b4b2a9; border-color: rgba(255,255,255,0.15);
+    }
+    .theme-toggle-btn.dark.active {
+      background: linear-gradient(135deg, #252523, #353532);
+      color: #f0efe8; border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+    }
+
+    /* ============================================================
+       ベース
+    ============================================================ */
+    body {
+      font-family: var(--font);
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding: 0.75rem 1rem 3rem;
+      transition: background 0.25s, color 0.25s;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+
+    header {
+      text-align: center; margin-bottom: 1.5rem;
+      padding: 1.25rem 1rem 0.75rem;
+    }
+    .header-emoji { font-size: 36px; margin-bottom: 6px; display: block; }
+    header h1 {
+      font-size: 21px; font-weight: 800;
+      background: var(--h1-gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 4px;
+    }
+    header p { font-size: 13px; color: var(--text2); font-weight: 600; }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem; margin-bottom: 1rem;
+      box-shadow: var(--card-shadow);
+      border: var(--card-border);
+      transition: background 0.25s, border 0.25s;
+    }
+    .card-title {
+      font-size: 13px; font-weight: 800; color: var(--accent-text);
+      margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field-full { grid-column: 1 / -1; }
+    label { font-size: 12px; font-weight: 700; color: var(--text2); }
+
+    input[type="number"] {
+      height: 42px; border-radius: var(--radius-md);
+      border: var(--input-border);
+      background: var(--surface2); color: var(--text);
+      font-size: 16px; font-weight: 700; padding: 0 12px; width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.25s;
+      font-family: var(--font);
+      appearance: textfield; -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus {
+      outline: none; border-color: var(--input-focus-border);
+      box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    }
+    .unit { font-size: 11px; color: var(--text3); font-weight: 600; }
+
+    .sex-toggle { display: flex; gap: 8px; }
+    .sex-btn {
+      flex: 1; height: 42px;
+      border: var(--input-border);
+      border-radius: var(--radius-md);
+      background: var(--surface2); color: var(--text2);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all 0.18s; font-family: var(--font);
+    }
+    .sex-btn.active {
+      background: var(--sex-active-bg); color: white; border-color: transparent;
+      box-shadow: 0 4px 12px var(--sex-active-shadow);
+    }
+
+    .error-msg { font-size: 13px; color: var(--accent-text); font-weight: 700; padding: 6px 0; display: none; }
+    .error-msg.show { display: block; }
+    .results { display: none; }
+    .results.show { display: block; }
+
+    /* 腎機能結果カード */
+    .result-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+    .result-card {
+      border-radius: var(--radius-lg); padding: 14px 12px;
+      cursor: pointer; transition: all 0.18s; position: relative;
+      border: 2.5px solid transparent;
+    }
+
+    /* ポップテーマ用カード色 */
+    body:not(.theme-dark) .result-card:nth-child(1) { background: linear-gradient(145deg, #fce7f3, #fdf4ff); }
+    body:not(.theme-dark) .result-card:nth-child(2) { background: linear-gradient(145deg, #ede9fe, #fce7f3); }
+    body:not(.theme-dark) .result-card:nth-child(3) { background: linear-gradient(145deg, #ccfbf1, #d1fae5); }
+    body:not(.theme-dark) .result-card:nth-child(4) { background: linear-gradient(145deg, #ffedd5, #fef9c3); }
+    body:not(.theme-dark) .result-card.selected:nth-child(1) { border-color: #f472b6; box-shadow: 0 4px 16px rgba(244,114,182,0.35); }
+    body:not(.theme-dark) .result-card.selected:nth-child(2) { border-color: #a78bfa; box-shadow: 0 4px 16px rgba(167,139,250,0.35); }
+    body:not(.theme-dark) .result-card.selected:nth-child(3) { border-color: #2dd4bf; box-shadow: 0 4px 16px rgba(45,212,191,0.35); }
+    body:not(.theme-dark) .result-card.selected:nth-child(4) { border-color: #fb923c; box-shadow: 0 4px 16px rgba(251,146,60,0.35); }
+
+    /* ダークテーマ用カード色 */
+    body.theme-dark .result-card { background: var(--surface2); border-color: transparent; }
+    body.theme-dark .result-card.selected { border-color: var(--accent); box-shadow: 0 4px 16px rgba(55,138,221,0.25); }
+
+    .r-label { font-size: 11px; font-weight: 800; color: var(--text2); margin-bottom: 6px; line-height: 1.4; }
+    .r-value { font-size: 26px; font-weight: 800; color: var(--text); }
+    .r-unit { font-size: 11px; color: var(--text2); margin-left: 2px; font-weight: 600; }
+    .r-stage {
+      font-size: 10px; margin-top: 6px; padding: 2px 8px;
+      border-radius: 20px; display: inline-block; font-weight: 800;
+    }
+    body:not(.theme-dark) .stage-g1, body:not(.theme-dark) .stage-g2 { background: #bbf7d0; color: #14532d; }
+    body:not(.theme-dark) .stage-g3a, body:not(.theme-dark) .stage-g3b { background: #fef08a; color: #713f12; }
+    body:not(.theme-dark) .stage-g4 { background: #fed7aa; color: #7c2d12; }
+    body:not(.theme-dark) .stage-g5 { background: #fecaca; color: #7f1d1d; }
+    body.theme-dark .stage-g1, body.theme-dark .stage-g2 { background: #27500A; color: #C0DD97; }
+    body.theme-dark .stage-g3a, body.theme-dark .stage-g3b { background: #633806; color: #FAC775; }
+    body.theme-dark .stage-g4 { background: #712B13; color: #F5C4B3; }
+    body.theme-dark .stage-g5 { background: #791F1F; color: #F7C1C1; }
+
+    .selected-badge {
+      display: none; position: absolute; top: 8px; right: 8px;
+      font-size: 9px; font-weight: 800; padding: 2px 7px;
+      border-radius: 20px; background: var(--stage-select-bg); color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .result-card.selected .selected-badge { display: inline-block; }
+
+    /* カルボプラチンカード */
+    .carboplatin-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl); padding: 1.25rem; margin-bottom: 1rem;
+      box-shadow: var(--carbo-shadow); border: var(--carbo-border);
+      transition: background 0.25s, border 0.25s;
+    }
+    .carboplatin-card .card-title { color: var(--accent2-text); }
+
+    .radio-label { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 6px; display: block; }
+    .radio-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .radio-btn {
+      height: 34px; padding: 0 13px;
+      border: 2px solid rgba(167,139,250,0.3);
+      border-radius: 20px; background: var(--accent2-bg);
+      color: var(--accent2-text); font-size: 12px; font-weight: 800;
+      cursor: pointer; transition: all 0.18s; font-family: var(--font);
+    }
+    .radio-btn.active {
+      background: linear-gradient(135deg, #a78bfa, #818cf8);
+      color: white; border-color: transparent;
+      box-shadow: 0 3px 10px rgba(167,139,250,0.45);
+    }
+    body.theme-dark .radio-btn.active {
+      background: linear-gradient(135deg, #0C447C, #185FA5);
+      box-shadow: 0 3px 10px rgba(55,138,221,0.3);
+    }
+
+    /* ダークテーマ: アップロードファイルのスタイルを再現 */
+    body.theme-dark {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif !important;
+    }
+    body.theme-dark header h1 {
+      font-size: 22px !important; font-weight: 500 !important;
+      background: none !important; -webkit-text-fill-color: var(--text) !important;
+      color: var(--text) !important;
+    }
+    body.theme-dark header p { font-size: 14px !important; font-weight: 400 !important; }
+    body.theme-dark .card-title {
+      font-size: 13px !important; font-weight: 500 !important;
+      text-transform: none !important; letter-spacing: 0 !important;
+      color: var(--text2) !important;
+    }
+    body.theme-dark .carboplatin-card .card-title { color: var(--text2) !important; }
+    body.theme-dark .card {
+      border-radius: var(--radius-lg) !important;
+      box-shadow: none !important; border: 0.5px solid var(--border) !important;
+    }
+    body.theme-dark .carboplatin-card {
+      border-radius: var(--radius-lg) !important;
+      box-shadow: none !important; border: 0.5px solid var(--border) !important;
+    }
+    body.theme-dark .formula-card {
+      border-radius: var(--radius-lg) !important;
+      box-shadow: none !important; border: 0.5px solid var(--border) !important;
+    }
+    body.theme-dark .formula-card h3 {
+      font-size: 13px !important; font-weight: 500 !important;
+      text-transform: none !important; letter-spacing: 0 !important; color: var(--text2) !important;
+    }
+    body.theme-dark .result-card {
+      border-radius: var(--radius-md) !important;
+      background: var(--surface2) !important;
+      border: none !important; border-left: 3px solid var(--accent) !important;
+      box-shadow: none !important;
+    }
+    body.theme-dark .result-card.selected {
+      border-left-color: var(--amber) !important;
+      background: var(--surface3) !important;
+    }
+    body.theme-dark .r-value { font-size: 24px !important; font-weight: 500 !important; }
+    body.theme-dark .selected-badge {
+      background: var(--amber-bg) !important; color: var(--amber-text) !important;
+      box-shadow: none !important; font-size: 10px !important; font-weight: 500 !important;
+    }
+    body.theme-dark input[type="number"] {
+      border-radius: var(--radius-md) !important; font-weight: 400 !important;
+      font-size: 15px !important; border: 0.5px solid var(--border) !important;
+    }
+    body.theme-dark .sex-btn {
+      border-radius: var(--radius-md) !important; font-weight: 400 !important;
+      border: 0.5px solid var(--border-mid) !important; height: 38px !important;
+    }
+    body.theme-dark .sex-btn.active {
+      background: var(--accent-bg) !important; color: var(--accent-text) !important;
+      border-color: var(--accent) !important; font-weight: 500 !important; box-shadow: none !important;
+    }
+    body.theme-dark .radio-btn {
+      border-radius: var(--radius-md) !important; height: 36px !important;
+      border: 0.5px solid var(--border-mid) !important;
+      background: transparent !important; color: var(--text2) !important;
+      font-weight: 400 !important; font-size: 14px !important;
+    }
+    body.theme-dark .radio-btn.active {
+      background: var(--amber-bg) !important; color: var(--amber-text) !important;
+      border-color: var(--amber) !important; font-weight: 500 !important; box-shadow: none !important;
+    }
+    body.theme-dark .auc-btn.active {
+      background: var(--amber-bg) !important; color: var(--amber-text) !important;
+      border-color: var(--amber) !important; box-shadow: none !important;
+    }
+    body.theme-dark .carbo-result {
+      background: var(--surface2) !important;
+      border: none !important; border-left: 3px solid var(--amber) !important;
+      border-radius: var(--radius-md) !important;
+      display: flex !important; align-items: baseline !important; gap: 10px !important;
+    }
+    body.theme-dark .carbo-result-value { font-size: 28px !important; font-weight: 500 !important; }
+    body.theme-dark .carbo-result-label { font-size: 13px !important; font-weight: 400 !important; color: var(--text2) !important; }
+    body.theme-dark .carbo-formula-note {
+      background: transparent !important; border-radius: 0 !important; padding: 0 !important;
+      margin-top: 10px !important; font-size: 12px !important; color: var(--text3) !important; font-weight: 400 !important;
+    }
+    body.theme-dark .carbo-formula-note code {
+      background: var(--surface2) !important; color: var(--text2) !important;
+      border-radius: 4px !important;
+    }
+    body.theme-dark .formula-row strong { font-weight: 500 !important; }
+    body.theme-dark .formula-row code {
+      background: var(--surface2) !important; color: var(--text) !important; border-radius: 4px !important;
+    }
+    body.theme-dark label { font-size: 13px !important; font-weight: 400 !important; }
+    body.theme-dark .radio-label { font-size: 13px !important; font-weight: 400 !important; }
+    body.theme-dark .r-label { font-size: 12px !important; font-weight: 400 !important; }
+    body.theme-dark .r-unit { font-size: 12px !important; }
+    body.theme-dark .r-stage { border-radius: 10px !important; font-weight: 500 !important; font-size: 11px !important; }
+    body.theme-dark .carbo-divider { height: 0.5px !important; background: var(--border) !important; }
+    body.theme-dark header { text-align: left !important; padding: 0 !important; margin-bottom: 2rem !important; }
+    body.theme-dark .header-emoji { display: none !important; }
+    body.theme-dark .dark-hide { display: none; }
+
+    .auc-btn {
+      border: 2px solid rgba(251,146,60,0.3);
+      background: var(--amber-bg); color: var(--amber-text);
+    }
+    .auc-btn.active {
+      background: linear-gradient(135deg, #fb923c, #f59e0b);
+      color: white; border-color: transparent;
+      box-shadow: 0 3px 10px rgba(251,146,60,0.4);
+    }
+    body.theme-dark .auc-btn.active {
+      background: linear-gradient(135deg, #633806, #854F0B);
+      box-shadow: 0 3px 10px rgba(239,159,39,0.3);
+    }
+
+    .carbo-divider { height: 1.5px; background: var(--accent2-bg); margin: 14px 0; border-radius: 2px; }
+
+    .carbo-result {
+      border-radius: var(--radius-lg); padding: 16px;
+      border: 2px solid rgba(167,139,250,0.2);
+      transition: background 0.25s;
+    }
+    body:not(.theme-dark) .carbo-result { background: linear-gradient(135deg, #ede9fe, #fce7f3); }
+    body.theme-dark .carbo-result { background: var(--surface2); border-color: rgba(167,139,250,0.15); }
+
+    .carbo-result-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .carbo-result-label { font-size: 12px; font-weight: 800; color: var(--accent2-text); }
+    .carbo-result-value { font-size: 36px; font-weight: 800; color: var(--text); line-height: 1; }
+    .carbo-result-unit { font-size: 14px; color: var(--text2); font-weight: 700; }
+    .carbo-formula-note {
+      font-size: 11px; color: var(--text2); font-weight: 600; line-height: 1.7;
+      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm); padding: 8px 10px;
+    }
+    body.theme-dark .carbo-formula-note { background: rgba(255,255,255,0.05); }
+    .carbo-formula-note code {
+      font-family: 'SFMono-Regular', 'Consolas', monospace;
+      font-size: 11px; background: white; padding: 1px 5px;
+      border-radius: 5px; color: #6d28d9;
+    }
+    body.theme-dark .carbo-formula-note code { background: var(--surface3); color: #c4b5fd; }
+
+    /* 計算式カード */
+    .formula-card {
+      background: var(--surface); border-radius: var(--radius-xl);
+      padding: 1.25rem; border: var(--card-border);
+      box-shadow: var(--card-shadow);
+      transition: background 0.25s, border 0.25s;
+    }
+    .formula-card h3 {
+      font-size: 13px; font-weight: 800; color: var(--teal-text);
+      margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .formula-row {
+      font-size: 12px; color: var(--text2); padding: 8px 0;
+      border-bottom: var(--formula-border); line-height: 1.7; font-weight: 600;
+    }
+    .formula-row:last-child { border-bottom: none; }
+    .formula-row strong { color: var(--text); font-weight: 800; display: block; margin-bottom: 2px; }
+    .formula-row code {
+      font-family: 'SFMono-Regular', 'Consolas', monospace;
+      font-size: 11px; background: var(--teal-bg);
+      padding: 2px 6px; border-radius: 5px; color: var(--teal-text); font-weight: 700;
+    }
+
+    footer { margin-top: 2rem; text-align: center; font-size: 12px; color: var(--text3); line-height: 1.8; font-weight: 600; }
+
+    @media (max-width: 480px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .result-cards { grid-template-columns: 1fr; }
+      header h1 { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- テーマ切り替えバー（最上部） -->
+  <div class="theme-bar">
+    <button class="theme-toggle-btn dark active" id="btn-dark" onclick="setTheme('dark')">🌙 ダーク</button>
+    <button class="theme-toggle-btn pop" id="btn-pop" onclick="setTheme('pop')">🌸 ポップ</button>
+  </div>
+
+  <div class="container">
+    <header>
+      <span class="header-emoji">💊</span>
+      <h1>CrCl ＆ カルボプラチン計算機</h1>
+      <p>4種類の腎機能式 ＋ カルバート式</p>
+    </header>
+
+    <div class="card">
+      <p class="card-title"><span class="dark-hide">🩺 </span>患者情報</p>
+      <div class="field-grid">
+        <div class="field">
+          <label for="age">年齢</label>
+          <input type="number" id="age" min="1" max="120" placeholder="65">
+          <span class="unit">歳</span>
+        </div>
+        <div class="field">
+          <label for="scr">血清クレアチニン (Scr)</label>
+          <input type="number" id="scr" min="0.01" step="0.01" placeholder="1.2">
+          <span class="unit">mg/dL</span>
+        </div>
+        <div class="field">
+          <label for="weight">体重</label>
+          <input type="number" id="weight" min="1" step="0.1" placeholder="60">
+          <span class="unit">kg</span>
+        </div>
+        <div class="field">
+          <label for="height">身長</label>
+          <input type="number" id="height" min="50" step="0.1" placeholder="165">
+          <span class="unit">cm</span>
+        </div>
+        <div class="field field-full">
+          <label>性別</label>
+          <div class="sex-toggle">
+            <button class="sex-btn active" id="btn-male" onclick="setSex('male')"><span class="dark-hide">👨 </span>男性</button>
+            <button class="sex-btn" id="btn-female" onclick="setSex('female')"><span class="dark-hide">👩 </span>女性</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="error-msg" id="err"><span class="dark-hide">⚠️ </span>すべての項目を正しく入力してください。</p>
+
+    <div class="results" id="results">
+      <div class="result-cards" id="result-cards"></div>
+
+      <div class="carboplatin-card">
+        <p class="card-title"><span class="dark-hide">✨ </span>カルボプラチン投与量（カルバート式）</p>
+
+        <span class="radio-label">腎機能の計算式を選択</span>
+        <div class="radio-group" id="formula-selector">
+          <button class="radio-btn active" onclick="selectFormula(0)">① CG</button>
+          <button class="radio-btn" onclick="selectFormula(1)">② CG+0.2補正</button>
+          <button class="radio-btn" onclick="selectFormula(2)">③ eGFR</button>
+          <button class="radio-btn" onclick="selectFormula(3)">④ 個別化eGFR</button>
+        </div>
+
+        <span class="radio-label">目標 AUC</span>
+        <div class="radio-group" id="auc-selector">
+          <button class="radio-btn auc-btn" data-auc="4" onclick="selectAuc(4)">AUC 4</button>
+          <button class="radio-btn auc-btn active" data-auc="5" onclick="selectAuc(5)">AUC 5</button>
+          <button class="radio-btn auc-btn" data-auc="6" onclick="selectAuc(6)">AUC 6</button>
+        </div>
+
+        <div class="carbo-divider"></div>
+
+        <div class="carbo-result">
+          <div class="carbo-result-row">
+            <span class="carbo-result-label">投与量</span>
+            <span class="carbo-result-value" id="carbo-value">—</span>
+            <span class="carbo-result-unit">mg</span>
+          </div>
+          <p class="carbo-formula-note" id="carbo-note"></p>
+        </div>
+      </div>
+
+      <div class="formula-card">
+        <h3><span class="dark-hide">📐 </span>使用した計算式</h3>
+        <div class="formula-row">
+          <strong>① Cockcroft-Gault (CG)</strong>
+          <code>(140 − 年齢) × 体重 / (72 × Scr) × [女性: × 0.85]</code>
+        </div>
+        <div class="formula-row">
+          <strong>② CG + 0.2補正（Scr+0.2を代入）</strong>
+          <code>(140 − 年齢) × 体重 / (72 × (Scr + 0.2)) × [女性: × 0.85]</code>
+        </div>
+        <div class="formula-row">
+          <strong>③ eGFR（日本人向け推算式）</strong>
+          <code>194 × Scr^(−1.094) × 年齢^(−0.287) × [女性: × 0.739]</code>
+        </div>
+        <div class="formula-row">
+          <strong>④ 個別化eGFR（体表面積補正なし）</strong>
+          <code>eGFR × BSA / 1.73</code>　BSA = <code>0.007184 × 身長^0.725 × 体重^0.425</code>
+        </div>
+        <div class="formula-row">
+          <strong>カルバート式（カルボプラチン投与量）</strong>
+          <code>投与量 (mg) = AUC × (GFR + 25)</code>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>本ツールは医療従事者向けの参考計算ツールです。</p>
+      <p>臨床判断は必ず担当医師の責任のもとで行ってください。</p>
+    </footer>
+  </div>
+
+  <script>
+    let sex = 'male';
+    let selectedFormula = 0;
+    let selectedAuc = 5;
+    let currentValues = [null, null, null, null];
+    const formulaLabels = ['① CG', '② CG+0.2補正', '③ eGFR', '④ 個別化eGFR'];
+    const cardColors = ['🩷', '💜', '🩵', '🧡'];
+    const isDark = () => document.body.classList.contains('theme-dark');
+
+    // テーマ切り替え
+    function setTheme(theme) {
+      document.body.classList.toggle('theme-dark', theme === 'dark');
+      document.getElementById('btn-pop').classList.toggle('active', theme === 'pop');
+      document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
+      document.querySelector('meta[name="theme-color"]').content =
+        theme === 'dark' ? '#1c1c1a' : '#fff5f9';
+      localStorage.setItem('crcl-theme', theme);
+    }
+
+    // 保存済みテーマを復元（デフォルト: ダーク）
+    const savedTheme = localStorage.getItem('crcl-theme') || 'dark';
+    if (savedTheme === 'dark') setTheme('dark');
+
+    function setSex(s) {
+      sex = s;
+      document.getElementById('btn-male').classList.toggle('active', s === 'male');
+      document.getElementById('btn-female').classList.toggle('active', s === 'female');
+      calculate();
+    }
+
+    function selectFormula(idx) {
+      selectedFormula = idx;
+      document.querySelectorAll('#formula-selector .radio-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.result-card').forEach((card, i) => {
+        card.classList.toggle('selected', i === idx);
+      });
+      updateCarboplatin();
+    }
+
+    function selectAuc(auc) {
+      selectedAuc = auc;
+      document.querySelectorAll('#auc-selector .radio-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.auc) === auc);
+      });
+      updateCarboplatin();
+    }
+
+    function round2(val) {
+      return (Math.round(val * 100) / 100).toFixed(2);
+    }
+
+    function getStage(gfr) {
+      if (gfr >= 90) return { label: 'G1 正常〜高値', cls: 'stage-g1' };
+      if (gfr >= 60) return { label: 'G2 軽度低下', cls: 'stage-g2' };
+      if (gfr >= 45) return { label: 'G3a 軽〜中等度', cls: 'stage-g3a' };
+      if (gfr >= 30) return { label: 'G3b 中〜高度', cls: 'stage-g3b' };
+      if (gfr >= 15) return { label: 'G4 高度低下', cls: 'stage-g4' };
+      return { label: 'G5 腎不全', cls: 'stage-g5' };
+    }
+
+    function updateCarboplatin() {
+      const gfr = currentValues[selectedFormula];
+      const carboVal = document.getElementById('carbo-value');
+      const carboNote = document.getElementById('carbo-note');
+      if (gfr === null) { carboVal.textContent = '—'; carboNote.textContent = ''; return; }
+      const dose = selectedAuc * (gfr + 25);
+      carboVal.textContent = round2(dose);
+      carboNote.innerHTML =
+        `AUC <strong>${selectedAuc}</strong> × ( ${formulaLabels[selectedFormula]}: <strong>${round2(gfr)}</strong> + 25 ) = <strong>${round2(dose)} mg</strong>`;
+    }
+
+    function calculate() {
+      const age    = parseFloat(document.getElementById('age').value);
+      const scr    = parseFloat(document.getElementById('scr').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const err    = document.getElementById('err');
+
+      if (isNaN(age) || isNaN(scr) || isNaN(weight) || isNaN(height) ||
+          age <= 0 || scr <= 0 || weight <= 0 || height <= 0) {
+        err.classList.add('show');
+        document.getElementById('results').classList.remove('show');
+        currentValues = [null, null, null, null];
+        return;
+      }
+      err.classList.remove('show');
+
+      const femaleCG   = sex === 'female' ? 0.85  : 1;
+      const femaleEGFR = sex === 'female' ? 0.739 : 1;
+
+      const cg           = (140 - age) * weight / (72 * scr) * femaleCG;
+      const cgCorr       = (140 - age) * weight / (72 * (scr + 0.2)) * femaleCG;
+      const egfr         = 194 * Math.pow(scr, -1.094) * Math.pow(age, -0.287) * femaleEGFR;
+      const bsa          = 0.007184 * Math.pow(height, 0.725) * Math.pow(weight, 0.425);
+      const egfrPersonal = egfr * bsa / 1.73;
+
+      currentValues = [cg, cgCorr, egfr, egfrPersonal];
+
+      const results = [
+        { label: 'Cockcroft-Gault (CG)',   value: cg,           unit: 'mL/min' },
+        { label: 'CG + 0.2補正',           value: cgCorr,       unit: 'mL/min' },
+        { label: 'eGFR 日本人推算式',       value: egfr,         unit: 'mL/min/1.73m²' },
+        { label: '個別化eGFR BSA補正なし',  value: egfrPersonal, unit: 'mL/min' },
+      ];
+
+      const container = document.getElementById('result-cards');
+      container.innerHTML = results.map((r, i) => {
+        const v = round2(r.value);
+        const stage = getStage(r.value);
+        const sel = i === selectedFormula ? 'selected' : '';
+        return `<div class="result-card ${sel}" onclick="selectFormula(${i})">
+          <span class="selected-badge">✓ 使用中</span>
+          <div class="r-label">${isDark() ? '' : cardColors[i] + ' '}${r.label}</div>
+          <div><span class="r-value">${v}</span><span class="r-unit"> ${r.unit}</span></div>
+          <span class="r-stage ${stage.cls}">${stage.label}</span>
+        </div>`;
+      }).join('');
+
+      document.getElementById('results').classList.add('show');
+      updateCarboplatin();
+    }
+
+    ['age','scr','weight','height'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculate);
+    });
+  </script>
+</body>
+</html>
